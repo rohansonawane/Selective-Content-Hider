@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>All sites — Selective Content Hider</title>
+  <link rel="stylesheet" href="options.css">
+</head>
+<body>
+  <main class="wrap">
+    <header class="top">
+      <div class="brand-block">
+        <div class="logo" aria-hidden="true">
+          <svg viewBox="0 0 32 32" width="22" height="22">
+            <defs>
+              <linearGradient id="g" x1="4" y1="2" x2="28" y2="30" gradientUnits="userSpaceOnUse">
+                <stop stop-color="#8b5cf6"/>
+                <stop offset="1" stop-color="#2dd4bf"/>
+              </linearGradient>
+            </defs>
+            <path fill="url(#g)" fill-rule="evenodd" d="M16 3.2 27 9.2v13.6L16 28.8 5 22.8V9.2L16 3.2Zm0 5.2 7.4 4.2v8.4L16 25.2l-7.4-4.2v-8.4L16 8.4Z"/>
+          </svg>
+        </div>
+        <div>
+          <p class="eyebrow">Selective Content Hider</p>
+          <h1>All sites</h1>
+          <p class="lead">Review saved hides, pause a hostname, or export a backup. Chrome Sync copies settings; export is the complete copy of your rules.</p>
+        </div>
+      </div>
+      <div class="actions">
+        <button type="button" class="btn" id="exportBtn">Export</button>
+        <button type="button" class="btn" id="importMergeBtn">Import merge</button>
+        <button type="button" class="btn danger" id="importReplaceBtn">Import replace</button>
+        <input type="file" id="importFile" accept="application/json,.json" hidden>
+      </div>
+    </header>
+
+    <p class="banner" id="banner" hidden></p>
+
+    <section class="toolbar">
+      <input type="search" id="search" placeholder="Filter by site" autocomplete="off">
+      <span class="meta" id="summary">0 sites</span>
+    </section>
+
+    <div id="siteList" class="sites"></div>
+  </main>
+  <script src="options.js"></script>
+</body>
+</html>

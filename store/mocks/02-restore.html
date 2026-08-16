@@ -1,0 +1,80 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <style>
+    html, body { margin: 0; height: 100%; }
+    body {
+      width: 1280px; height: 800px;
+      display: flex; flex-direction: column;
+      background: #0c0c12;
+      font-family: ui-sans-serif, system-ui, sans-serif;
+      color: #f4f4f5;
+    }
+    .top {
+      padding: 48px 64px 24px;
+    }
+    .kicker { color: #2dd4bf; font-size: 13px; font-weight: 700; letter-spacing: .08em; text-transform: uppercase; margin: 0 0 10px; }
+    h1 { font-size: 36px; letter-spacing: -.04em; margin: 0 0 8px; }
+    p { margin: 0; color: #9b9ba8; font-size: 16px; }
+    .page {
+      margin: 24px 64px 64px;
+      flex: 1;
+      background: #14141c;
+      border: 1px solid rgba(255,255,255,.07);
+      border-radius: 16px;
+      padding: 28px;
+      position: relative;
+    }
+    .article h2 { margin: 0 0 12px; font-size: 22px; }
+    .article p { max-width: 62ch; line-height: 1.55; }
+    .hud {
+      position: absolute; left: 50%; top: 18px; transform: translateX(-50%);
+      display: flex; gap: 10px; align-items: center;
+      background: rgba(15,23,42,.94); border: 1px solid rgba(255,255,255,.1);
+      border-radius: 999px; padding: 10px 12px 10px 14px; font-size: 13px;
+    }
+    .dot { width: 8px; height: 8px; border-radius: 50%; background: #2dd4bf; }
+    kbd { font: 600 11px ui-monospace, monospace; background: rgba(255,255,255,.08); border: 1px solid rgba(255,255,255,.12); border-radius: 4px; padding: 1px 5px; }
+    .hud button { border: 0; border-radius: 999px; padding: 6px 10px; background: rgba(255,255,255,.08); color: #f8fafc; font-weight: 600; }
+    .box {
+      margin-top: 20px; border: 2px solid #2dd4bf; background: rgba(45,212,191,.12);
+      border-radius: 8px; padding: 14px 16px;
+    }
+    .label { font-size: 11px; font-weight: 700; color: #2dd4bf; margin-bottom: 6px; }
+    .stub {
+      margin-top: 16px; display: flex; align-items: center; gap: 8px;
+      padding: 6px 10px; border: 1px dashed rgba(45,212,191,.45); border-radius: 8px;
+      background: #0f172a; font-size: 12px;
+    }
+    .stub b { color: #2dd4bf; margin-right: 6px; }
+    .stub button { margin-left: auto; border: 0; border-radius: 999px; padding: 4px 8px; background: #2dd4bf; color: #0f172a; font-weight: 700; font-size: 11px; }
+  </style>
+</head>
+<body>
+  <div class="top">
+    <p class="kicker">Screenshot 2</p>
+    <h1>Restore from the bar on the page</h1>
+    <p>Hidden sections leave a compact restore control. No trip back to the popup required.</p>
+  </div>
+  <div class="page">
+    <div class="hud">
+      <span class="dot"></span>
+      <span>Click a section · <kbd>↑</kbd> parent · <kbd>Esc</kbd></span>
+      <button type="button">Done</button>
+    </div>
+    <div class="article">
+      <h2>Today’s briefing</h2>
+      <p>The story you opened the tab to read stays in place. Only the block you clicked is gone.</p>
+      <div class="box">
+        <div class="label">ASIDE</div>
+        Related stories · Newsletter signup · Recirculation rail
+      </div>
+      <div class="stub">
+        <span><b>Hidden</b>Related stories</span>
+        <button type="button">Restore</button>
+      </div>
+    </div>
+  </div>
+</body>
+</html>

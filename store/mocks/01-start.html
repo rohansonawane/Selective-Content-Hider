@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <style>
+    html, body { margin: 0; height: 100%; }
+    body {
+      width: 1280px; height: 800px;
+      display: flex; align-items: center; justify-content: center; gap: 64px;
+      background: #0c0c12;
+      font-family: ui-sans-serif, system-ui, sans-serif;
+      color: #f4f4f5;
+    }
+    .copy { width: 420px; }
+    .kicker { color: #2dd4bf; font-size: 13px; font-weight: 700; letter-spacing: .08em; text-transform: uppercase; margin: 0 0 10px; }
+    h1 { font-size: 42px; letter-spacing: -.04em; line-height: 1.1; margin: 0 0 14px; }
+    p { margin: 0; color: #9b9ba8; font-size: 18px; line-height: 1.45; }
+    .phone {
+      width: 340px; background: #0c0c12; border: 1px solid rgba(255,255,255,.08);
+      border-radius: 16px; padding: 12px; box-sizing: border-box;
+    }
+    .row { display: flex; justify-content: space-between; align-items: center; margin-bottom: 12px; }
+    .brand { display: flex; gap: 8px; align-items: center; }
+    .logo { width: 32px; height: 32px; border-radius: 9px; background: #111118; display: grid; place-items: center; }
+    .name { font-size: 13px; font-weight: 650; }
+    .site { font-size: 11px; color: #9b9ba8; }
+    .chip { font-size: 10px; font-weight: 700; letter-spacing: .04em; text-transform: uppercase; padding: 4px 8px; border-radius: 999px; background: rgba(45,212,191,.14); color: #2dd4bf; }
+    .cta { border: 1px solid rgba(45,212,191,.22); background: rgba(45,212,191,.14); border-radius: 12px; padding: 12px 14px; }
+    .cta small { display: block; color: #2dd4bf; font-size: 10px; font-weight: 700; letter-spacing: .08em; text-transform: uppercase; }
+    .cta b { display: block; font-size: 15px; margin: 2px 0; }
+    .cta span { color: #9b9ba8; font-size: 12px; }
+    .panel { margin-top: 10px; background: #16161f; border: 1px solid rgba(255,255,255,.07); border-radius: 12px; padding: 10px 12px; }
+    .panel h2 { margin: 0; font-size: 11px; letter-spacing: .04em; text-transform: uppercase; color: #c4c4ce; }
+    .empty { text-align: center; color: #9b9ba8; font-size: 12px; padding: 14px 6px; }
+  </style>
+</head>
+<body>
+  <div class="copy">
+    <p class="kicker">Screenshot 1</p>
+    <h1>Start hiding, then click any section</h1>
+    <p>The popup stays out of the way. Selection happens on the page.</p>
+  </div>
+  <div class="phone">
+    <div class="row">
+      <div class="brand">
+        <div class="logo"><svg viewBox="0 0 32 32" width="18" height="18"><path fill="#2dd4bf" fill-rule="evenodd" d="M16 3.2 27 9.2v13.6L16 28.8 5 22.8V9.2L16 3.2Zm0 5.2 7.4 4.2v8.4L16 25.2l-7.4-4.2v-8.4L16 8.4Z"/></svg></div>
+        <div><div class="name">Content Hider</div><div class="site">news.example.com</div></div>
+      </div>
+      <span class="chip">Selecting</span>
+    </div>
+    <div class="cta">
+      <small>Selection mode</small>
+      <b>Stop hiding</b>
+      <span>Click a section · Esc when done</span>
+    </div>
+    <div class="panel">
+      <h2>This site</h2>
+      <div class="empty">Start hiding, then click a section.</div>
+    </div>
+  </div>
+</body>
+</html>

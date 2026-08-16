@@ -24,10 +24,11 @@ All data is stored locally on your device and is used solely for:
 - Restoring previously hidden elements
 
 4. Data Storage
-- All data is stored locally in your browser
-- No data is sent to external servers
-- No cloud synchronization
-- No data sharing with third parties
+- Hidden-section rules and settings are stored in your browser
+- If you are signed in to Chrome, settings (and as many rules as quota allows) may sync through Google Chrome Sync
+- A JSON export stays as a file you save; it is not uploaded by the extension
+- No data is sent to servers we operate
+- No data sharing with third parties besides Chrome Sync when you have it enabled
 
 5. Your Rights
 You have complete control over your data:

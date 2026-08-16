@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <style>
+    html, body { margin: 0; height: 100%; }
+    body {
+      width: 1280px; height: 800px;
+      background: #0c0c12;
+      font-family: ui-sans-serif, system-ui, sans-serif;
+      color: #f4f4f5;
+      padding: 48px 64px;
+      box-sizing: border-box;
+    }
+    .kicker { color: #2dd4bf; font-size: 13px; font-weight: 700; letter-spacing: .08em; text-transform: uppercase; margin: 0 0 10px; }
+    h1 { font-size: 36px; letter-spacing: -.04em; margin: 0 0 8px; }
+    .sub { margin: 0 0 28px; color: #9b9ba8; font-size: 16px; }
+    .card { background: #16161f; border: 1px solid rgba(255,255,255,.07); border-radius: 14px; padding: 14px 16px; margin-bottom: 10px; display: flex; align-items: center; gap: 12px; }
+    .host { font-weight: 700; flex: 1; }
+    .count { color: #9b9ba8; font-size: 12px; }
+    .pill { font-size: 11px; font-weight: 700; padding: 3px 8px; border-radius: 999px; background: rgba(245,158,11,.16); color: #fbbf24; }
+    .btn { border: 0; background: rgba(45,212,191,.12); color: #2dd4bf; font-weight: 700; font-size: 12px; border-radius: 999px; padding: 5px 10px; }
+    .danger { background: rgba(251,113,133,.12); color: #fb7185; }
+    .item { margin-top: 8px; background: #1c1c28; border-radius: 10px; padding: 8px 10px; font-size: 13px; color: #d4d4d8; }
+  </style>
+</head>
+<body>
+  <p class="kicker">Screenshot 3</p>
+  <h1>Manage saved hides for every site</h1>
+  <p class="sub">Pause a hostname, clear it, or export a JSON backup.</p>
+  <div class="card">
+    <div class="host">news.example.com</div>
+    <span class="count">3 hidden</span>
+    <button class="btn" type="button">Pause</button>
+    <button class="btn danger" type="button">Clear</button>
+  </div>
+  <div class="card" style="display:block">
+    <div style="display:flex;align-items:center;gap:12px">
+      <div class="host">www.youtube.com</div>
+      <span class="pill">Paused</span>
+      <span class="count">2 hidden</span>
+      <button class="btn" type="button">Unpause</button>
+      <button class="btn danger" type="button">Clear</button>
+    </div>
+    <div class="item">aside · Home sidebar recommendations</div>
+  </div>
+  <div class="card">
+    <div class="host">mail.google.com</div>
+    <span class="count">1 hidden</span>
+    <button class="btn" type="button">Pause</button>
+    <button class="btn danger" type="button">Clear</button>
+  </div>
+</body>
+</html>
