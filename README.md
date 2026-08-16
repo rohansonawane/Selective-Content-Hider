@@ -36,7 +36,9 @@ You can also right-click an element and choose **Hide this element**, or **Pause
 
 ## Privacy
 
-Rules and settings stay in your browser. If Chrome Sync is on, settings (and as many rules as quota allows) can follow your account. Export is a local JSON file. Nothing is sent to a server we operate. See [PRIVACY.md](PRIVACY.md).
+Rules and settings stay in your browser. If Chrome Sync is on, settings (and as many rules as quota allows) can follow your account. Export is a local JSON file. Nothing is sent to a server we operate.
+
+Privacy policy: https://rohansonawane.github.io/Selective-Content-Hider/privacy.html
 
 ## License
 
@@ -50,4 +52,8 @@ Listing copy, image sizes, and permission justifications are in [STORE.md](STORE
 ./package.sh
 ```
 
-Upload `dist/selective-content-hider.zip`, then add screenshots from `store/screenshots/` and the promo tile.
+Upload `dist/selective-content-hider.zip`, then add screenshots from `store/screenshots/` and the promo tile. Use these listing URLs:
+
+- Homepage: https://rohansonawane.github.io/Selective-Content-Hider/
+- Privacy: https://rohansonawane.github.io/Selective-Content-Hider/privacy.html
+- Support: https://rohansonawane.github.io/Selective-Content-Hider/support.html

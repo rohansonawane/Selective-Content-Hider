@@ -1,74 +1,56 @@
-# Privacy Policy for Website Section Hider
+# Privacy Policy for Selective Content Hider
 
-*Last updated: [Current Date]*
+*Last updated: August 16, 2026*
+
+Public page: https://rohansonawane.github.io/Selective-Content-Hider/privacy.html
 
 ## Introduction
 
-Website Section Hider ("we", "our", or "us") is committed to protecting your privacy. This Privacy Policy explains how we collect, use, and safeguard your information when you use our Chrome extension.
+Selective Content Hider ("we", "our", or "us") is committed to protecting your privacy. This Privacy Policy explains how information is stored when you use the extension.
 
-## Information We Collect
+## Information we store
 
-### Local Storage
-- Your hidden section preferences
-- Extension settings
-- Recently hidden elements
+On your device, the extension may save:
 
-### What We Don't Collect
-- Personal information
-- Browsing history
-- Website content
-- User credentials
-- Analytics data
+- Selectors and labels for sections you chose to hide, keyed by website
+- Settings such as highlight, persistence, similar-item matching, restore stubs, and paused sites
 
-## How We Use Your Information
+We do not collect personal information, browsing history, page content, credentials, or analytics.
 
-All data is stored locally on your device and is used solely for:
-- Remembering your hidden sections
-- Maintaining your extension preferences
-- Restoring previously hidden elements
+## How that information is used
 
-## Data Storage
+It is used only to remember hidden sections, keep your preferences, and restore content when you ask.
 
-- Hidden-section rules and settings are stored in your browser
-- If you are signed in to Chrome, settings (and as many rules as quota allows) may sync through Google Chrome Sync
-- A JSON export stays as a file you save; it is not uploaded by the extension
-- No data is sent to servers we operate
-- No data sharing with third parties besides Chrome Sync when you have it enabled
+## Where it lives
 
-## Your Rights
+- Rules and settings are stored in your browser (Chrome local storage)
+- If you are signed in to Chrome and Sync is on, settings and as many rules as quota allows may copy through Google Chrome Sync
+- A JSON export is a file you save. The extension does not upload it
+- We do not operate servers for this extension and do not sell or share your data
 
-You have complete control over your data:
-- Clear all stored data through Chrome's extension settings
-- Disable the extension at any time
-- Remove the extension to delete all associated data
+## Your control
 
-## Third-Party Services
+- Restore or clear hides from the popup or the All sites page
+- Clear extension data in Chrome settings
+- Disable or remove the extension to delete associated data on that profile
 
-This extension:
-- Does not use any third-party services
-- Does not include any tracking code
-- Does not integrate with external APIs
+## Third parties
 
-## Children's Privacy
+The extension does not include tracking code or call our APIs. Chrome Sync, if you enable it, is provided by Google as part of Chrome.
 
-This extension is not intended for use by children under 13 years of age. We do not knowingly collect any personal information from children under 13.
+## Children
 
-## Changes to This Policy
+This extension is not directed at children under 13. We do not knowingly collect personal information from children under 13.
 
-We may update this privacy policy from time to time. We will notify you of any changes by:
-- Posting the new privacy policy on this page
-- Updating the "Last updated" date
+## Changes
 
-## Contact Us
+If this policy changes, we will post the update on the public privacy page and change the "Last updated" date.
 
-If you have any questions about this Privacy Policy, please contact us:
-- GitHub: [Your GitHub Profile]
-- Email: [Your Email]
+## Contact
+
+- GitHub: https://github.com/rohansonawane
+- Email: rohansonawane28@gmail.com
 
 ## Consent
 
-By using our extension, you consent to this privacy policy.
-
----
-
-*This privacy policy was last updated on [Current Date]* 
+By using the extension, you agree to this privacy policy.

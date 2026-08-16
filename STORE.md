@@ -1,6 +1,14 @@
 # Chrome Web Store listing
 
-Copy these fields into the [Chrome Developer Dashboard](https://chrome.google.com/webstore/devconsole). Host the privacy policy at a public URL (GitHub Pages or the `privacy.html` file in this repo).
+Copy these fields into the [Chrome Developer Dashboard](https://chrome.google.com/webstore/devconsole).
+
+## Public URLs
+
+| Listing field | URL |
+| --- | --- |
+| Homepage | https://rohansonawane.github.io/Selective-Content-Hider/ |
+| Privacy policy | https://rohansonawane.github.io/Selective-Content-Hider/privacy.html |
+| Support | https://rohansonawane.github.io/Selective-Content-Hider/support.html |
 
 ## Item details
 
@@ -70,4 +78,10 @@ chmod +x package.sh
 ./package.sh
 ```
 
-Upload `dist/selective-content-hider.zip`. After upload, attach screenshots, the promo tile, the privacy policy URL, and the permission justifications. Then submit for review.
+Upload `dist/selective-content-hider.zip`. After upload, attach screenshots, the promo tile, and these URLs:
+
+- Homepage: https://rohansonawane.github.io/Selective-Content-Hider/
+- Privacy: https://rohansonawane.github.io/Selective-Content-Hider/privacy.html
+- Support: https://rohansonawane.github.io/Selective-Content-Hider/support.html
+
+Then add the permission justifications and submit for review.

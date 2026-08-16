@@ -209,6 +209,14 @@ input[type="search"] {
   border-radius: 14px;
 }
 
+.legal {
+  margin-top: 24px;
+  text-align: center;
+  font-size: 12px;
+}
+
+.legal a { color: var(--teal); }
+
 @media (max-width: 720px) {
   .top { flex-direction: column; }
 }

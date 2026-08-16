@@ -1,9 +1,9 @@
 {
   "manifest_version": 3,
   "name": "Selective Content Hider",
-  "version": "2.2.0",
+  "version": "2.2.1",
   "description": "Hide distracting sections on any website with a click. Restore them on the page, pause a site, or back up your rules.",
-  "homepage_url": "https://github.com/rohansonawane/Selective-Content-Hider",
+  "homepage_url": "https://rohansonawane.github.io/Selective-Content-Hider/",
   "author": "Rohan Sonawane",
   "minimum_chrome_version": "114",
   "permissions": ["activeTab", "scripting", "storage", "contextMenus", "commands"],
