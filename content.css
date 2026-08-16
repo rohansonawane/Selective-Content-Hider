@@ -1,0 +1,22 @@
+/* Injected as an extension stylesheet so page CSP cannot block hiding. */
+[data-sch-hidden="1"] {
+  display: none !important;
+}
+
+[data-sch-hiding="1"] {
+  opacity: 0 !important;
+  pointer-events: none !important;
+}
+
+[data-sch-stub] {
+  display: block !important;
+}
+
+tr[data-sch-stub] {
+  display: table-row !important;
+}
+
+li[data-sch-stub] {
+  display: list-item !important;
+  list-style: none;
+}

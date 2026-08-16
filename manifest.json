@@ -1,8 +1,11 @@
 {
   "manifest_version": 3,
   "name": "Selective Content Hider",
-  "version": "1.3",
-  "description": "Hide unwanted sections of websites by selecting them.",
+  "version": "2.2.0",
+  "description": "Hide distracting sections on any website with a click. Restore them on the page, pause a site, or back up your rules.",
+  "homepage_url": "https://github.com/rohansonawane/Selective-Content-Hider",
+  "author": "Rohan Sonawane",
+  "minimum_chrome_version": "114",
   "permissions": ["activeTab", "scripting", "storage", "contextMenus", "commands"],
   "host_permissions": ["<all_urls>"],
   "background": {
@@ -11,29 +14,46 @@
   "content_scripts": [
     {
       "matches": ["<all_urls>"],
-      "js": ["content.js"]
+      "js": ["content.js"],
+      "css": ["content.css"],
+      "run_at": "document_start",
+      "all_frames": false
     }
   ],
   "action": {
     "default_popup": "popup.html",
+    "default_title": "Selective Content Hider",
     "default_icon": {
-      "16": "icon.png",
-      "48": "icon.png",
-      "128": "icon.png"
+      "16": "icons/icon16.png",
+      "32": "icons/icon32.png",
+      "48": "icons/icon48.png",
+      "128": "icons/icon128.png"
     }
+  },
+  "icons": {
+    "16": "icons/icon16.png",
+    "32": "icons/icon32.png",
+    "48": "icons/icon48.png",
+    "128": "icons/icon128.png"
+  },
+  "options_ui": {
+    "page": "options.html",
+    "open_in_tab": true
   },
   "commands": {
     "toggle_hiding": {
       "suggested_key": {
-        "default": "Ctrl+Shift+H"
+        "default": "Ctrl+Shift+H",
+        "mac": "Command+Shift+H"
       },
       "description": "Toggle hiding mode"
     },
     "reset_hidden": {
       "suggested_key": {
-        "default": "Ctrl+Shift+R"
+        "default": "Ctrl+Shift+Y",
+        "mac": "Command+Shift+Y"
       },
-      "description": "Reset hidden elements"
+      "description": "Restore hidden elements on this page"
     }
   }
 }

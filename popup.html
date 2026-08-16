@@ -1,354 +1,92 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
-    <title>Selective Content Hider</title>
-    <style>
-        :root {
-            --primary-color: #4a90e2;
-            --secondary-color: #2c3e50;
-            --accent-color: #e74c3c;
-            --background-color: #1a1a1a;
-            --text-color: #ffffff;
-            --border-radius: 8px;
-            --card-bg: rgba(255, 255, 255, 0.05);
-        }
-
-        html {
-            width: 320px;
-        }
-
-        body {
-            font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
-            padding: 16px;
-            background: var(--background-color);
-            color: var(--text-color);
-            margin: 0;
-        }
-
-        .header {
-            display: flex;
-            align-items: center;
-            justify-content: space-between;
-            margin-bottom: 24px;
-            padding-bottom: 16px;
-            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
-        }
-
-        .title {
-            font-size: 20px;
-            font-weight: 600;
-            margin: 0;
-            background: linear-gradient(45deg, var(--primary-color), #6c5ce7);
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
-        }
-
-        .status-indicator {
-            width: 12px;
-            height: 12px;
-            border-radius: 50%;
-            background: #e74c3c;
-            box-shadow: 0 0 8px rgba(231, 76, 60, 0.5);
-            transition: all 0.3s ease;
-        }
-
-        .status-indicator.active {
-            background: #2ecc71;
-            box-shadow: 0 0 8px rgba(46, 204, 113, 0.5);
-        }
-
-        .button-group {
-            display: flex;
-            flex-direction: column;
-            gap: 12px;
-            margin-bottom: 24px;
-        }
-
-        .button {
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            padding: 14px 20px;
-            border-radius: var(--border-radius);
-            border: none;
-            font-weight: 500;
-            cursor: pointer;
-            transition: all 0.2s ease;
-            background: var(--primary-color);
-            color: white;
-            position: relative;
-            overflow: hidden;
-        }
-
-        .button::before {
-            content: '';
-            position: absolute;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            background: linear-gradient(45deg, transparent, rgba(255, 255, 255, 0.1), transparent);
-            transform: translateX(-100%);
-            transition: transform 0.6s ease;
-        }
-
-        .button:hover::before {
-            transform: translateX(100%);
-        }
-
-        .button:hover {
-            transform: translateY(-2px);
-            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
-        }
-
-        .button:active {
-            transform: translateY(0);
-        }
-
-        .button.secondary {
-            background: var(--secondary-color);
-        }
-
-        .settings-section {
-            background: var(--card-bg);
-            border-radius: var(--border-radius);
-            padding: 16px;
-            margin-top: 16px;
-        }
-
-        .settings-title {
-            font-size: 14px;
-            font-weight: 500;
-            margin-bottom: 16px;
-            color: rgba(255, 255, 255, 0.7);
-            display: flex;
-            align-items: center;
-            gap: 8px;
-        }
-
-        .toggle-group {
-            display: flex;
-            flex-direction: column;
-            gap: 16px;
-        }
-
-        .toggle-item {
-            display: flex;
-            align-items: center;
-            justify-content: space-between;
-            padding: 8px 0;
-        }
-
-        .toggle-label {
-            font-size: 14px;
-            color: rgba(255, 255, 255, 0.9);
-        }
-
-        .toggle-switch {
-            position: relative;
-            display: inline-block;
-            width: 44px;
-            height: 24px;
-        }
-
-        .toggle-switch input {
-            opacity: 0;
-            width: 0;
-            height: 0;
-        }
-
-        .slider {
-            position: absolute;
-            cursor: pointer;
-            top: 0;
-            left: 0;
-            right: 0;
-            bottom: 0;
-            background-color: #ccc;
-            transition: .4s;
-            border-radius: 24px;
-            box-shadow: inset 0 1px 3px rgba(0, 0, 0, 0.2);
-        }
-
-        .slider:before {
-            position: absolute;
-            content: "";
-            height: 20px;
-            width: 20px;
-            left: 2px;
-            bottom: 2px;
-            background-color: white;
-            transition: .4s;
-            border-radius: 50%;
-            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
-        }
-
-        input:checked + .slider {
-            background: linear-gradient(45deg, var(--primary-color), #6c5ce7);
-        }
-
-        input:checked + .slider:before {
-            transform: translateX(20px);
-        }
-
-        .shortcut-info {
-            font-size: 12px;
-            color: rgba(255, 255, 255, 0.5);
-            margin-top: 16px;
-            text-align: center;
-            padding: 8px;
-            background: var(--card-bg);
-            border-radius: var(--border-radius);
-        }
-
-        .stats-bar {
-            background: var(--card-bg);
-            border-radius: var(--border-radius);
-            padding: 12px;
-            margin-bottom: 16px;
-            display: flex;
-            justify-content: space-around;
-        }
-
-        .stat-item {
-            text-align: center;
-        }
-
-        .stat-label {
-            font-size: 12px;
-            color: rgba(255, 255, 255, 0.7);
-            display: block;
-            margin-bottom: 4px;
-        }
-
-        .stat-value {
-            font-size: 20px;
-            font-weight: 600;
-            color: var(--primary-color);
-        }
-
-        .recently-hidden {
-            background: var(--card-bg);
-            border-radius: var(--border-radius);
-            padding: 16px;
-            margin-bottom: 16px;
-        }
-
-        .recent-elements-list {
-            max-height: 150px;
-            overflow-y: auto;
-        }
-
-        .recent-element {
-            display: flex;
-            align-items: center;
-            justify-content: space-between;
-            padding: 8px;
-            margin: 4px 0;
-            background: rgba(255, 255, 255, 0.05);
-            border-radius: 4px;
-            font-size: 12px;
-        }
-
-        .recent-element:hover {
-            background: rgba(255, 255, 255, 0.1);
-        }
-
-        .recent-element-text {
-            white-space: nowrap;
-            overflow: hidden;
-            text-overflow: ellipsis;
-            max-width: 200px;
-        }
-
-        .restore-button {
-            background: none;
-            border: none;
-            color: var(--primary-color);
-            cursor: pointer;
-            padding: 4px 8px;
-            font-size: 12px;
-            border-radius: 4px;
-        }
-
-        .restore-button:hover {
-            background: rgba(74, 144, 226, 0.1);
-        }
-
-        .empty-message {
-            text-align: center;
-            color: rgba(255, 255, 255, 0.5);
-            padding: 16px;
-            font-size: 14px;
-        }
-
-        .button:disabled {
-            cursor: not-allowed;
-            transform: none !important;
-            box-shadow: none !important;
-        }
-
-        .button:disabled::before {
-            display: none;
-        }
-    </style>
+  <meta charset="UTF-8">
+  <title>Selective Content Hider</title>
+  <link rel="stylesheet" href="popup.css">
 </head>
 <body>
-    <div class="header">
-        <h1 class="title">Content Hider</h1>
-        <div class="status-indicator" id="statusIndicator"></div>
+  <header class="header">
+    <div class="brand">
+      <span class="logo" aria-hidden="true">
+        <svg viewBox="0 0 32 32" width="22" height="22">
+          <defs>
+            <linearGradient id="g" x1="4" y1="2" x2="28" y2="30" gradientUnits="userSpaceOnUse">
+              <stop stop-color="#8b5cf6"/>
+              <stop offset="1" stop-color="#2dd4bf"/>
+            </linearGradient>
+          </defs>
+          <path fill="url(#g)" fill-rule="evenodd" d="M16 3.2 27 9.2v13.6L16 28.8 5 22.8V9.2L16 3.2Zm0 5.2 7.4 4.2v8.4L16 25.2l-7.4-4.2v-8.4L16 8.4Z"/>
+        </svg>
+      </span>
+      <div class="brand-copy">
+        <h1>Content Hider</h1>
+        <p class="site" id="siteLabel">This page</p>
+      </div>
     </div>
+    <span class="status" id="statusChip">Idle</span>
+  </header>
 
-    <div class="stats-bar">
-        <div class="stat-item">
-            <span class="stat-label">Hidden Elements</span>
-            <span class="stat-value" id="hiddenCount">0</span>
-        </div>
+  <button type="button" class="cta" id="toggle">
+    <span class="cta-kicker" id="toggleKicker">Selection mode</span>
+    <span class="cta-title" id="toggleTitle">Start hiding</span>
+    <span class="cta-copy" id="toggleCopy">Click any section on the page</span>
+  </button>
+
+  <p class="notice hidden" id="notice"></p>
+  <p class="notice notice-pause hidden" id="pauseNotice">Hides are paused. Saved rules stay; the page is shown in full.</p>
+
+  <section class="panel">
+    <div class="panel-head">
+      <div>
+        <h2>This site</h2>
+        <p class="muted" id="countLabel">Nothing hidden yet</p>
+      </div>
+      <div class="panel-actions">
+        <button type="button" class="text-btn" id="pause" disabled>Pause</button>
+        <button type="button" class="text-btn" id="reset" disabled>Restore all</button>
+      </div>
     </div>
+    <div class="list" id="hiddenList"></div>
+  </section>
 
-    <div class="button-group">
-        <button id="toggle" class="button">Enable Hiding Mode</button>
-        <button id="reset" class="button secondary">Restore Hidden Elements</button>
-    </div>
+  <details class="panel settings">
+    <summary>Settings</summary>
+    <label class="setting">
+      <span>
+        <strong>Hover highlight</strong>
+        <small>Outline the section under your cursor</small>
+      </span>
+      <input type="checkbox" id="highlightToggle" checked>
+    </label>
+    <label class="setting">
+      <span>
+        <strong>Remember after reload</strong>
+        <small>Keep items hidden the next time you visit</small>
+      </span>
+      <input type="checkbox" id="persistToggle" checked>
+    </label>
+    <label class="setting">
+      <span>
+        <strong>Hide similar items</strong>
+        <small>Ask before hiding matching sections together</small>
+      </span>
+      <input type="checkbox" id="smartSelectToggle">
+    </label>
+    <label class="setting">
+      <span>
+        <strong>Restore stubs</strong>
+        <small>Leave a restore bar where a section was</small>
+      </span>
+      <input type="checkbox" id="stubsToggle" checked>
+    </label>
+  </details>
 
-    <div class="recently-hidden">
-        <h2 class="settings-title">Recently Hidden</h2>
-        <div id="recentElements" class="recent-elements-list">
-            <!-- Recent elements will be populated here -->
-        </div>
-    </div>
+  <footer class="footer">
+    <span id="shortcutToggle">Ctrl+Shift+H</span>
+    <button type="button" class="text-btn" id="openOptions">All sites</button>
+  </footer>
 
-    <div class="settings-section">
-        <h2 class="settings-title">Settings</h2>
-        <div class="toggle-group">
-            <div class="toggle-item">
-                <span class="toggle-label">Highlight on Hover</span>
-                <label class="toggle-switch">
-                    <input type="checkbox" id="highlightToggle" checked>
-                    <span class="slider"></span>
-                </label>
-            </div>
-            <div class="toggle-item">
-                <span class="toggle-label">Persist Hidden Elements</span>
-                <label class="toggle-switch">
-                    <input type="checkbox" id="persistToggle" checked>
-                    <span class="slider"></span>
-                </label>
-            </div>
-            <div class="toggle-item">
-                <span class="toggle-label">Smart Select</span>
-                <label class="toggle-switch">
-                    <input type="checkbox" id="smartSelectToggle">
-                    <span class="slider"></span>
-                </label>
-            </div>
-        </div>
-    </div>
-
-    <div class="shortcut-info">
-        Toggle Hiding Mode: Ctrl+Shift+H
-    </div>
-
-    <script src="popup.js"></script>
+  <script src="popup.js"></script>
 </body>
 </html>

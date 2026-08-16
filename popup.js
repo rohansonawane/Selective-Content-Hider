@@ -1,187 +1,236 @@
-document.addEventListener('DOMContentLoaded', function() {
-    const toggleButton = document.getElementById('toggle');
-    const resetButton = document.getElementById('reset');
-    const statusIndicator = document.getElementById('statusIndicator');
-    const highlightToggle = document.getElementById('highlightToggle');
-    const persistToggle = document.getElementById('persistToggle');
-    const smartSelectToggle = document.getElementById('smartSelectToggle');
+document.addEventListener("DOMContentLoaded", () => {
+  const toggleButton = document.getElementById("toggle");
+  const toggleTitle = document.getElementById("toggleTitle");
+  const toggleCopy = document.getElementById("toggleCopy");
+  const statusChip = document.getElementById("statusChip");
+  const siteLabel = document.getElementById("siteLabel");
+  const countLabel = document.getElementById("countLabel");
+  const resetButton = document.getElementById("reset");
+  const pauseButton = document.getElementById("pause");
+  const pauseNotice = document.getElementById("pauseNotice");
+  const hiddenList = document.getElementById("hiddenList");
+  const notice = document.getElementById("notice");
+  const highlightToggle = document.getElementById("highlightToggle");
+  const persistToggle = document.getElementById("persistToggle");
+  const smartSelectToggle = document.getElementById("smartSelectToggle");
+  const stubsToggle = document.getElementById("stubsToggle");
 
-    // Initialize state
-    chrome.storage.local.get(['hidingEnabled', 'highlightEnabled', 'persistEnabled', 'smartSelectEnabled'], function(result) {
-        updateUI(result.hidingEnabled);
-        highlightToggle.checked = result.highlightEnabled !== false;
-        persistToggle.checked = result.persistEnabled !== false;
-        smartSelectToggle.checked = result.smartSelectEnabled || false;
-    });
+  const isMac = /Mac|iPhone|iPad/.test(navigator.platform);
+  const mod = isMac ? "⌘" : "Ctrl";
+  document.getElementById("shortcutToggle").textContent = `${mod}+Shift+H selection`;
 
-    // Toggle hiding mode
-    toggleButton.addEventListener('click', function() {
-        chrome.storage.local.get(['hidingEnabled'], function(result) {
-            const newState = !result.hidingEnabled;
-            chrome.storage.local.set({ hidingEnabled: newState }, function() {
-                updateUI(newState);
-                updateTabState(newState);
-            });
-        });
-    });
+  let tab = null;
+  let pageState = null;
+  let restricted = false;
 
-    // Reset hidden elements
-    resetButton.addEventListener('click', function() {
-        chrome.tabs.query({active: true, currentWindow: true}, function(tabs) {
-            chrome.tabs.sendMessage(tabs[0].id, {action: "reset"}, function(response) {
-                if (response && response.success) {
-                    // Clear storage directly in popup as well
-                    chrome.storage.local.set({
-                        hiddenElements: [],
-                        recentElements: []
-                    }, function() {
-                        // Update UI
-                        updateHiddenCount();
-                        updateRecentElements();
-                    });
-                }
-            });
-        });
-    });
+  function showNotice(message) {
+    notice.textContent = message;
+    notice.classList.toggle("hidden", !message);
+  }
 
-    // Toggle highlight feature
-    highlightToggle.addEventListener('change', function() {
-        chrome.storage.local.set({ highlightEnabled: this.checked });
-    });
+  function render() {
+    const enabled = Boolean(pageState?.selectionMode);
+    const paused = Boolean(pageState?.paused);
+    const items = pageState?.hiddenItems || [];
+    const hostname = pageState?.hostname || (tab ? hostnameFrom(tab.url) : "This page");
 
-    // Toggle persistence feature
-    persistToggle.addEventListener('change', function() {
-        chrome.storage.local.set({ persistEnabled: this.checked });
-    });
+    siteLabel.textContent = restricted ? "Unavailable on this page" : hostname;
+    statusChip.textContent = enabled ? "Selecting" : paused ? "Paused" : "Idle";
+    statusChip.classList.toggle("on", enabled);
+    statusChip.classList.toggle("paused", paused && !enabled);
 
-    // Toggle Smart Select feature
-    smartSelectToggle.addEventListener('change', function() {
-        const enabled = this.checked;
-        chrome.storage.local.set({ smartSelectEnabled: enabled });
-        
-        chrome.tabs.query({active: true, currentWindow: true}, function(tabs) {
-            chrome.tabs.sendMessage(tabs[0].id, {
-                action: "toggleSmartSelect",
-                enabled: enabled
-            });
-        });
-    });
+    toggleButton.classList.toggle("active", enabled);
+    toggleButton.disabled = restricted;
+    toggleTitle.textContent = enabled ? "Stop hiding" : "Start hiding";
+    toggleCopy.textContent = enabled
+      ? "Click a section · Esc when done"
+      : paused
+        ? "Start hiding will unpause this site"
+        : "Click any section on the page";
 
-    // Update UI based on state
-    function updateUI(enabled) {
-        toggleButton.textContent = enabled ? 'Disable Hiding Mode' : 'Enable Hiding Mode';
-        statusIndicator.classList.toggle('active', enabled);
+    pauseButton.disabled = restricted || (!paused && items.length === 0);
+    pauseButton.classList.toggle("active", paused);
+    pauseButton.textContent = paused ? "Unpause" : "Pause";
+    pauseNotice.classList.toggle("hidden", restricted || !paused);
+
+    countLabel.textContent = items.length
+      ? `${items.length} hidden${paused ? " · paused" : ""}`
+      : "Nothing hidden yet";
+    resetButton.disabled = restricted || items.length === 0;
+
+    hiddenList.innerHTML = "";
+    if (restricted) {
+      hiddenList.innerHTML = `<div class="empty">Chrome pages cannot be modified.</div>`;
+      return;
+    }
+    if (!items.length) {
+      hiddenList.innerHTML = `<div class="empty">Start hiding, then click a section.</div>`;
+      return;
     }
 
-    // Update tab state
-    function updateTabState(enabled) {
-        chrome.tabs.query({active: true, currentWindow: true}, function(tabs) {
-            chrome.tabs.sendMessage(tabs[0].id, {action: enabled ? "enable" : "disable"}, function(response) {
-                if (chrome.runtime.lastError) {
-                    console.error('Error sending message:', chrome.runtime.lastError);
-                }
-            });
-        });
-    }
-
-    // Listen for keyboard shortcuts
-    chrome.commands.onCommand.addListener(function(command) {
-        if (command === 'toggle_hiding') {
-            toggleButton.click();
-        } else if (command === 'reset_hidden') {
-            resetButton.click();
-        }
+    items.forEach((item) => {
+      const row = document.createElement("div");
+      row.className = "item";
+      row.innerHTML = `
+        <span class="item-tag">${escapeHtml(item.tag || "el")}</span>
+        <span class="item-text" title="${escapeHtml(item.text || "")}">${escapeHtml(item.text || "Hidden element")}</span>
+        <button type="button">Restore</button>
+      `;
+      row.querySelector("button").addEventListener("click", () => restoreItem(item.id));
+      hiddenList.appendChild(row);
     });
+  }
 
-    // Add these variables at the top
-    let recentElements = [];
-    const MAX_RECENT_ELEMENTS = 5;
+  function escapeHtml(value) {
+    return String(value)
+      .replace(/&/g, "&amp;")
+      .replace(/</g, "&lt;")
+      .replace(/>/g, "&gt;")
+      .replace(/"/g, "&quot;");
+  }
 
-    // Add this function to update the counter
-    function updateHiddenCount() {
-        chrome.storage.local.get(['hiddenElements'], function(result) {
-            const count = result.hiddenElements ? result.hiddenElements.length : 0;
-            document.getElementById('hiddenCount').textContent = count;
-            
-            // Update the reset button state
-            const resetButton = document.getElementById('reset');
-            resetButton.disabled = count === 0;
-            resetButton.style.opacity = count === 0 ? '0.5' : '1';
+  function hostnameFrom(url = "") {
+    try {
+      return new URL(url).hostname || "This page";
+    } catch (_) {
+      return "This page";
+    }
+  }
+
+  function canInject(url = "") {
+    return Boolean(url) &&
+      !/^(chrome|chrome-extension|edge|about|devtools|view-source):/i.test(url) &&
+      !url.startsWith("https://chrome.google.com/webstore") &&
+      !url.startsWith("https://chromewebstore.google.com");
+  }
+
+  async function send(message) {
+    if (!tab?.id) throw new Error("No active tab");
+    try {
+      return await chrome.tabs.sendMessage(tab.id, message);
+    } catch (_) {
+      try {
+        await chrome.scripting.insertCSS({
+          target: { tabId: tab.id },
+          files: ["content.css"],
         });
+      } catch (__) {
+        /* css may already be present */
+      }
+      await chrome.scripting.executeScript({
+        target: { tabId: tab.id },
+        files: ["content.js"],
+      });
+      return chrome.tabs.sendMessage(tab.id, message);
+    }
+  }
+
+  async function refresh() {
+    const [active] = await chrome.tabs.query({ active: true, currentWindow: true });
+    tab = active;
+    if (!tab || !canInject(tab.url)) {
+      restricted = true;
+      pageState = null;
+      showNotice("Open a regular website to hide sections. Chrome pages and the Web Store are blocked.");
+      render();
+      return;
     }
 
-    // Add this function to update recent elements
-    function updateRecentElements() {
-        chrome.storage.local.get(['recentElements'], function(result) {
-            recentElements = result.recentElements || [];
-            const recentElementsList = document.getElementById('recentElements');
-            recentElementsList.innerHTML = '';
-
-            if (recentElements.length === 0) {
-                const emptyMessage = document.createElement('div');
-                emptyMessage.className = 'empty-message';
-                emptyMessage.textContent = 'No hidden elements';
-                recentElementsList.appendChild(emptyMessage);
-                return;
-            }
-
-            recentElements.forEach((element, index) => {
-                const div = document.createElement('div');
-                div.className = 'recent-element';
-                
-                const textSpan = document.createElement('span');
-                textSpan.className = 'recent-element-text';
-                textSpan.textContent = element.text || 'Hidden Element';
-                
-                const restoreButton = document.createElement('button');
-                restoreButton.className = 'restore-button';
-                restoreButton.textContent = 'Restore';
-                restoreButton.onclick = () => restoreElement(index);
-                
-                div.appendChild(textSpan);
-                div.appendChild(restoreButton);
-                recentElementsList.appendChild(div);
-            });
-        });
+    restricted = false;
+    showNotice("");
+    try {
+      pageState = await send({ action: "getState" });
+    } catch (_) {
+      restricted = true;
+      pageState = null;
+      showNotice("Could not connect to this tab. Try refreshing the page.");
     }
+    render();
+  }
 
-    // Add this function to restore a specific element
-    function restoreElement(index) {
-        chrome.tabs.query({active: true, currentWindow: true}, function(tabs) {
-            chrome.tabs.sendMessage(tabs[0].id, {
-                action: "restoreElement",
-                index: index
-            }, function(response) {
-                if (response && response.success) {
-                    updateRecentElements();
-                    updateHiddenCount();
-                }
-            });
-        });
+  async function restoreItem(id) {
+    try {
+      pageState = await send({ action: "restoreElement", id });
+      render();
+    } catch (_) {
+      showNotice("Could not restore that item. Try refreshing the page.");
     }
+  }
 
-    // Add these lines to the existing initialization code
-    updateHiddenCount();
-    updateRecentElements();
-    
-    // Listen for changes in storage
-    chrome.storage.onChanged.addListener(function(changes, namespace) {
-        if (namespace === 'local') {
-            if (changes.hiddenElements) {
-                updateHiddenCount();
-            }
-            if (changes.recentElements) {
-                updateRecentElements();
-            }
-        }
-    });
-});
-
-// Add this message listener at the top level
-chrome.runtime.onMessage.addListener(function(request, sender, sendResponse) {
-    if (request.action === "elementsRestored") {
-        // Update UI when elements are restored
-        updateHiddenCount();
-        updateRecentElements();
+  chrome.storage.local.get(
+    ["highlightEnabled", "persistEnabled", "smartSelectEnabled", "stubsEnabled"],
+    (data) => {
+      highlightToggle.checked = data.highlightEnabled !== false;
+      persistToggle.checked = data.persistEnabled !== false;
+      smartSelectToggle.checked = Boolean(data.smartSelectEnabled);
+      stubsToggle.checked = data.stubsEnabled !== false;
     }
+  );
+
+  toggleButton.addEventListener("click", async () => {
+    if (restricted) return;
+    try {
+      const next = !pageState?.selectionMode;
+      pageState = await send({ action: next ? "enable" : "disable" });
+      render();
+      if (next) window.close();
+    } catch (_) {
+      showNotice("Could not start hiding on this tab. Try refreshing the page.");
+    }
+  });
+
+  pauseButton.addEventListener("click", async () => {
+    try {
+      pageState = await send({ action: "togglePaused" });
+      render();
+    } catch (_) {
+      showNotice("Could not pause this site. Try refreshing the page.");
+    }
+  });
+
+  resetButton.addEventListener("click", async () => {
+    try {
+      pageState = await send({ action: "reset" });
+      render();
+    } catch (_) {
+      showNotice("Could not restore items. Try refreshing the page.");
+    }
+  });
+
+  document.getElementById("openOptions").addEventListener("click", () => {
+    chrome.runtime.openOptionsPage();
+  });
+
+  async function saveSetting(patch) {
+    await chrome.storage.local.set(patch);
+    if (!restricted) {
+      try {
+        pageState = await send({ action: "setSettings", ...patch });
+        render();
+      } catch (_) {
+        /* settings still persist for the next page load */
+      }
+    }
+  }
+
+  highlightToggle.addEventListener("change", () => {
+    saveSetting({ highlightEnabled: highlightToggle.checked });
+  });
+  persistToggle.addEventListener("change", () => {
+    saveSetting({ persistEnabled: persistToggle.checked });
+  });
+  smartSelectToggle.addEventListener("change", () => {
+    saveSetting({ smartSelectEnabled: smartSelectToggle.checked });
+  });
+  stubsToggle.addEventListener("change", () => {
+    saveSetting({ stubsEnabled: stubsToggle.checked });
+  });
+
+  chrome.storage.onChanged.addListener((changes, namespace) => {
+    if (namespace === "local" && (changes.hiddenByHost || changes.hiddenElements || changes.pausedByHost)) {
+      refresh();
+    }
+  });
+
+  refresh();
 });
